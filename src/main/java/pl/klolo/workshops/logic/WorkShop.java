@@ -1,71 +1,89 @@
 package pl.klolo.workshops.logic;
 
-import pl.klolo.workshops.domain.*;
-import pl.klolo.workshops.domain.Currency;
+import pl.klolo.workshops.domain.Holding;
+import pl.klolo.workshops.domain.Sex;
+import pl.klolo.workshops.domain.User;
 import pl.klolo.workshops.mock.HoldingMockGenerator;
-import pl.klolo.workshops.mock.UserMockGenerator;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
+import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static java.lang.String.format;
-import static java.util.stream.Collectors.*;
-import static java.util.stream.Collectors.toSet;
 
 class WorkShop {
-    /**
-     * Lista holdingów wczytana z mocka.
-     */
-    private final List<Holding> holdings;
+  /**
+   * Lista holdingów wczytana z mocka.
+   */
+  private final List<Holding> holdings;
 
-    private final Predicate<User> isWoman = user -> user.getSex().equals(Sex.WOMAN);
-    private Predicate<User> isMan = m -> m.getSex() == Sex.MAN;
+  private final Predicate<User> isWoman = user -> user.getSex().equals(Sex.WOMAN);
+  private Predicate<User> isMan = m -> m.getSex() == Sex.MAN;
 
-    WorkShop() {
-        final HoldingMockGenerator holdingMockGenerator = new HoldingMockGenerator();
-        holdings = holdingMockGenerator.generate();
-    }
+  WorkShop() {
+    final HoldingMockGenerator holdingMockGenerator = new HoldingMockGenerator();
+    holdings = holdingMockGenerator.generate();
+  }
 
-    /**
-     * Metoda zwraca liczbę holdingów w których jest przynajmniej jedna firma.
-     */
+  /**
+   * Metoda zwraca liczbę holdingów w których jest przynajmniej jedna firma.
+   */
 
+  long findAmountOfHoldingsWithAtLeastOneCompany() {
+    return holdings.stream()
+      .filter(holding -> holding.getCompanies().size() >= 1)
+      .count();
 
-    /**
-     * Zwraca nazwy wszystkich holdingów pisane z małej litery w formie listy.
-     */
-
-
-    /**
-     * Zwraca nazwy wszystkich holdingów sklejone w jeden string i posortowane.
-     * String ma postać: (Coca-Cola, Nestle, Pepsico)
-     */
+  }
 
 
-    /**
-     * Zwraca liczbę firm we wszystkich holdingach.
-     */
+  /**
+   * Zwraca nazwy wszystkich holdingów pisane z małej litery w formie listy.
+   */
+
+  List<String> findHoldingsNameAsList() {
+    return holdings.stream()
+      .map(Holding::getName)
+      .collect(Collectors.toList());
+
+  }
 
 
-    /**
-     * Zwraca liczbę wszystkich pracowników we wszystkich firmach.
-     */
+  /**
+   * Zwraca nazwy wszystkich holdingów sklejone w jeden string i posortowane.
+   * String ma postać: (Coca-Cola, Nestle, Pepsico)
+   */
+
+  String findHoldingsNameAsString() {
+    return holdings.stream()
+      .map(Holding::getName)
+      .sorted()
+      .collect(Collectors.joining(", ", "", ""));
+  }
 
 
-    /**
+  /**
+   * Zwraca liczbę firm we wszystkich holdingach.
+   */
+
+  long findTotalAmountOfCompanies() {
+    return holdings.stream()
+      .map(holding -> holding.getCompanies().size())
+      .reduce(0, Integer::sum);
+  }
+
+
+  /**
+   * Zwraca liczbę wszystkich pracowników we wszystkich firmach.
+   */
+
+  int findTotalAmountOfEmployees() {
+    return holdings.stream()
+      .flatMap(holding -> holding.getCompanies().stream()
+        .map(company -> company.getUsers().size()))
+      .reduce(0, Integer::sum);
+
+  }
+
+  /**
      * Zwraca listę wszystkich nazw firm w formie listy. Tworzenie strumienia firm umieść w osobnej metodzie którą
      * później będziesz wykorzystywać.
      */
