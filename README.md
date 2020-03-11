@@ -1,1 +1,1 @@
-# java-8-exercises
+# Java 8 streams exercises
