@@ -1,13 +1,15 @@
 package pl.klolo.workshops.logic;
 
-import pl.klolo.workshops.domain.Holding;
-import pl.klolo.workshops.domain.Sex;
-import pl.klolo.workshops.domain.User;
+import pl.klolo.workshops.domain.*;
 import pl.klolo.workshops.mock.HoldingMockGenerator;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 class WorkShop {
   /**
@@ -84,238 +86,287 @@ class WorkShop {
   }
 
   /**
-     * Zwraca listę wszystkich nazw firm w formie listy. Tworzenie strumienia firm umieść w osobnej metodzie którą
-     * później będziesz wykorzystywać.
-     */
+   * Zwraca listę wszystkich nazw firm w formie listy. Tworzenie strumienia firm umieść w osobnej metodzie którą
+   * później będziesz wykorzystywać.
+   */
+
+  public Stream<Company> findCompaniesAsStream() {
+    return holdings.stream()
+      .flatMap(holding -> holding.getCompanies().stream());
+  }
+
+  public List<String> findCompaniesNamesAsList() {
+    return findCompaniesAsStream()
+      .map(Company::getName)
+      .collect(Collectors.toList());
+
+  }
+
+  /**
+   * Zwraca listę wszystkich firm jako listę, której implementacja to LinkedList. Obiektów nie przepisujemy
+   * po zakończeniu działania strumienia.
+   */
+
+  public LinkedList<String> findCompaniesAsLinkedList() {
+    return findCompaniesAsStream()
+      .map(Company::getName)
+      .collect(Collectors.toCollection(LinkedList::new));
+  }
+
+  /**
+   * Zwraca listę firm jako String gdzie poszczególne firmy są oddzielone od siebie znakiem "+"
+   */
+
+  public String findCompaniesAsStringWithPlusDelimiter() {
+    return findCompaniesAsStream()
+      .map(Company::getName)
+      .sorted()
+      .collect(Collectors.joining(" + ", "Names: ", "."));
+  }
+
+
+  /**
+   * Zwraca listę firm jako string gdzie poszczególne firmy są oddzielone od siebie znakiem "+".
+   * Używamy collect i StringBuilder.
+   * <p>
+   * UWAGA: Zadanie z gwiazdką. Nie używamy zmiennych.
+   */
+
+  public String findCompaniesAsStringWithPlusDelimiterAsStringBuilder() {
+    AtomicBoolean first = new AtomicBoolean(false);
+    return findCompaniesAsStream()
+      .map(Company::getName)
+      .sorted()
+      .collect(Collector.of(StringBuilder::new,
+        (stringBuilder, s) -> {
+          if (first.getAndSet(true)) stringBuilder.append(" + ");
+          stringBuilder.append(s);
+        },
+        StringBuilder::append,
+        StringBuilder::toString));
 
+  }
 
-    /**
-     * Zwraca listę wszystkich firm jako listę, której implementacja to LinkedList. Obiektów nie przepisujemy
-     * po zakończeniu działania strumienia.
-     */
+  /**
+   * Zwraca liczbę wszystkich rachunków, użytkowników we wszystkich firmach.
+   */
 
+  public long findAccountsAmount() {
+    return findCompaniesAsStream()
+      .flatMap(company -> company.getUsers().stream()
+        .flatMap(user -> user.getAccounts().stream()))
+      .count();
 
-    /**
-     * Zwraca listę firm jako String gdzie poszczególne firmy są oddzielone od siebie znakiem "+"
-     */
+  }
 
+  public String findAllCurrenciesAsString() {
+    return findCompaniesAsStream()
+      .flatMap(company -> company.getUsers().stream()
+        .flatMap(user -> user.getAccounts().stream()))
+      .map(Account::getCurrency)
+      .map(Enum::toString)
+      .distinct()
+      .sorted()
+      .collect(Collectors.joining(", "));
+  }
 
-    /**
-     * Zwraca listę firm jako string gdzie poszczególne firmy są oddzielone od siebie znakiem "+".
-     * Używamy collect i StringBuilder.
-     * <p>
-     * UWAGA: Zadanie z gwiazdką. Nie używamy zmiennych.
-     */
+  /**
+   * Zwraca listę wszystkich walut w jakich są rachunki jako string, w którym wartości
+   * występują bez powtórzeń i są posortowane.
+   */
 
 
-    /**
-     * Zwraca liczbę wszystkich rachunków, użytkowników we wszystkich firmach.
-     */
+  /**
+   * Metoda zwraca analogiczne dane jak getAllCurrencies, jednak na utworzonym zbiorze nie uruchamiaj metody
+   * stream, tylko skorzystaj z  Stream.generate. Wspólny kod wynieś do osobnej metody.
+   *
+   * @see #getAllCurrencies()
+   */
 
 
-    /**
-     * Zwraca listę wszystkich walut w jakich są rachunki jako string, w którym wartości
-     * występują bez powtórzeń i są posortowane.
-     */
+  /**
+   * Zwraca liczbę kobiet we wszystkich firmach. Powtarzający się fragment kodu tworzący strumień użytkowników umieść
+   * w osobnej metodzie. Predicate określający czy mamy do czynienia z kobietą niech będzie polem statycznym w klasie.
+   */
 
 
-    /**
-     * Metoda zwraca analogiczne dane jak getAllCurrencies, jednak na utworzonym zbiorze nie uruchamiaj metody
-     * stream, tylko skorzystaj z  Stream.generate. Wspólny kod wynieś do osobnej metody.
-     *
-     * @see #getAllCurrencies()
-     */
+  /**
+   * Przelicza kwotę na rachunku na złotówki za pomocą kursu określonego w enum Currency.
+   */
 
 
+  /**
+   * Przelicza kwotę na podanych rachunkach na złotówki za pomocą kursu określonego w enum Currency i sumuje ją.
+   */
 
 
-    /**
-     * Zwraca liczbę kobiet we wszystkich firmach. Powtarzający się fragment kodu tworzący strumień użytkowników umieść
-     * w osobnej metodzie. Predicate określający czy mamy do czynienia z kobietą niech będzie polem statycznym w klasie.
-     */
+  /**
+   * Zwraca imiona użytkowników w formie zbioru, którzy spełniają podany warunek.
+   */
 
 
+  /**
+   * Metoda filtruje użytkowników starszych niż podany jako parametr wiek, wyświetla ich na konsoli, odrzuca mężczyzn
+   * i zwraca ich imiona w formie listy.
+   */
 
-    /**
-     * Przelicza kwotę na rachunku na złotówki za pomocą kursu określonego w enum Currency.
-     */
 
+  /**
+   * Dla każdej firmy uruchamia przekazaną metodę.
+   */
 
-    /**
-     * Przelicza kwotę na podanych rachunkach na złotówki za pomocą kursu określonego w enum Currency i sumuje ją.
-     */
 
+  /**
+   * Wyszukuje najbogatsza kobietę i zwraca ją. Metoda musi uzwględniać to że rachunki są w różnych walutach.
+   */
+  //pomoc w rozwiązaniu problemu w zadaniu: https://stackoverflow.com/a/55052733/9360524
 
-    /**
-     * Zwraca imiona użytkowników w formie zbioru, którzy spełniają podany warunek.
-     */
 
+  /**
+   * Zwraca nazwy pierwszych N firm. Kolejność nie ma znaczenia.
+   */
 
-    /**
-     * Metoda filtruje użytkowników starszych niż podany jako parametr wiek, wyświetla ich na konsoli, odrzuca mężczyzn
-     * i zwraca ich imiona w formie listy.
-     */
 
+  /**
+   * Metoda zwraca jaki rodzaj rachunku jest najpopularniejszy. Stwórz pomocniczą metodę getAccountStream.
+   * Jeżeli nie udało się znaleźć najpopularniejszego rachunku metoda ma wyrzucić wyjątek IllegalStateException.
+   * Pierwsza instrukcja metody to return.
+   */
 
-    /**
-     * Dla każdej firmy uruchamia przekazaną metodę.
-     */
 
+  /**
+   * Zwraca pierwszego z brzegu użytkownika dla podanego warunku. W przypadku kiedy nie znajdzie użytkownika wyrzuca
+   * wyjątek IllegalArgumentException.
+   */
 
-    /**
-     * Wyszukuje najbogatsza kobietę i zwraca ją. Metoda musi uzwględniać to że rachunki są w różnych walutach.
-     */
-    //pomoc w rozwiązaniu problemu w zadaniu: https://stackoverflow.com/a/55052733/9360524
 
+  /**
+   * Zwraca mapę firm, gdzie kluczem jest jej nazwa a wartością lista pracowników.
+   */
 
 
+  /**
+   * Zwraca mapę firm, gdzie kluczem jest jej nazwa a wartością lista pracowników przechowywanych jako String
+   * składający się z imienia i nazwiska. Podpowiedź:  Możesz skorzystać z metody entrySet.
+   */
 
-    /**
-     * Zwraca nazwy pierwszych N firm. Kolejność nie ma znaczenia.
-     */
 
+  /**
+   * Zwraca mapę firm, gdzie kluczem jest jej nazwa a wartością lista pracowników przechowywanych jako obiekty
+   * typu T, tworzonych za pomocą przekazanej funkcji.
+   */
+  //pomoc w rozwiązaniu problemu w zadaniu: https://stackoverflow.com/a/54969615/9360524
 
-    /**
-     * Metoda zwraca jaki rodzaj rachunku jest najpopularniejszy. Stwórz pomocniczą metodę getAccountStream.
-     * Jeżeli nie udało się znaleźć najpopularniejszego rachunku metoda ma wyrzucić wyjątek IllegalStateException.
-     * Pierwsza instrukcja metody to return.
-     */
 
+  /**
+   * Zwraca mapę gdzie kluczem jest flaga mówiąca o tym czy mamy do czynienia z mężczyzną, czy z kobietą.
+   * Osoby "innej" płci mają zostać zignorowane. Wartością jest natomiast zbiór nazwisk tych osób.
+   */
 
-    /**
-     * Zwraca pierwszego z brzegu użytkownika dla podanego warunku. W przypadku kiedy nie znajdzie użytkownika wyrzuca
-     * wyjątek IllegalArgumentException.
-     */
 
+  /**
+   * Zwraca mapę rachunków, gdzie kluczem jest numer rachunku, a wartością ten rachunek.
+   */
 
-    /**
-     * Zwraca mapę firm, gdzie kluczem jest jej nazwa a wartością lista pracowników.
-     */
 
+  /**
+   * Zwraca listę wszystkich imion w postaci Stringa, gdzie imiona oddzielone są spacją i nie zawierają powtórzeń.
+   */
 
 
-    /**
-     * Zwraca mapę firm, gdzie kluczem jest jej nazwa a wartością lista pracowników przechowywanych jako String
-     * składający się z imienia i nazwiska. Podpowiedź:  Możesz skorzystać z metody entrySet.
-     */
+  /**
+   * Zwraca zbiór wszystkich użytkowników. Jeżeli jest ich więcej niż 10 to obcina ich ilość do 10.
+   */
 
 
-    /**
-     * Zwraca mapę firm, gdzie kluczem jest jej nazwa a wartością lista pracowników przechowywanych jako obiekty
-     * typu T, tworzonych za pomocą przekazanej funkcji.
-     */
-    //pomoc w rozwiązaniu problemu w zadaniu: https://stackoverflow.com/a/54969615/9360524
+  /**
+   * Zapisuje listę numerów rachunków w pliku na dysku, gdzie w każda linijka wygląda następująco:
+   * NUMER_RACHUNKU|KWOTA|WALUTA
+   * <p>
+   * Skorzystaj z strumieni i try-resources.
+   */
 
 
-    /**
-     * Zwraca mapę gdzie kluczem jest flaga mówiąca o tym czy mamy do czynienia z mężczyzną, czy z kobietą.
-     * Osoby "innej" płci mają zostać zignorowane. Wartością jest natomiast zbiór nazwisk tych osób.
-     */
+  /**
+   * Zwraca użytkownika, który spełnia podany warunek.
+   */
 
 
-    /**
-     * Zwraca mapę rachunków, gdzie kluczem jest numer rachunku, a wartością ten rachunek.
-     */
+  /**
+   * Dla podanego użytkownika zwraca informacje o tym ile ma lat w formie:
+   * IMIE NAZWISKO ma lat X. Jeżeli użytkownik nie istnieje to zwraca text: Brak użytkownika.
+   * <p>
+   * Uwaga: W prawdziwym kodzie nie przekazuj Optionali jako parametrów.
+   */
 
 
-    /**
-     * Zwraca listę wszystkich imion w postaci Stringa, gdzie imiona oddzielone są spacją i nie zawierają powtórzeń.
-     */
+  /**
+   * Metoda wypisuje na ekranie wszystkich użytkowników (imię, nazwisko) posortowanych od z do a.
+   * Zosia Psikuta, Zenon Kucowski, Zenek Jawowy ... Alfred Pasibrzuch, Adam Wojcik
+   */
 
 
-    /**
-     * Zwraca zbiór wszystkich użytkowników. Jeżeli jest ich więcej niż 10 to obcina ich ilość do 10.
-     */
+  /**
+   * Zwraca mapę, gdzie kluczem jest typ rachunku a wartością kwota wszystkich środków na rachunkach tego typu
+   * przeliczona na złotówki.
+   */
+  //TODO: fix
+  // java.lang.AssertionError:
+  // Expected :87461.4992
+  // Actual   :87461.3999
 
 
-    /**
-     * Zapisuje listę numerów rachunków w pliku na dysku, gdzie w każda linijka wygląda następująco:
-     * NUMER_RACHUNKU|KWOTA|WALUTA
-     * <p>
-     * Skorzystaj z strumieni i try-resources.
-     */
+  /**
+   * Zwraca sumę kwadratów wieków wszystkich użytkowników.
+   */
 
 
-    /**
-     * Zwraca użytkownika, który spełnia podany warunek.
-     */
+  /**
+   * Metoda zwraca N losowych użytkowników (liczba jest stała). Skorzystaj z metody generate. Użytkownicy nie mogą się
+   * powtarzać, wszystkie zmienną muszą być final. Jeżeli podano liczbę większą niż liczba użytkowników należy
+   * wyrzucić wyjątek (bez zmiany sygnatury metody).
+   */
 
 
-    /**
-     * Dla podanego użytkownika zwraca informacje o tym ile ma lat w formie:
-     * IMIE NAZWISKO ma lat X. Jeżeli użytkownik nie istnieje to zwraca text: Brak użytkownika.
-     * <p>
-     * Uwaga: W prawdziwym kodzie nie przekazuj Optionali jako parametrów.
-     */
+  /**
+   * Zwraca strumień wszystkich firm.
+   */
 
 
-    /**
-     * Metoda wypisuje na ekranie wszystkich użytkowników (imię, nazwisko) posortowanych od z do a.
-     * Zosia Psikuta, Zenon Kucowski, Zenek Jawowy ... Alfred Pasibrzuch, Adam Wojcik
-     */
+  /**
+   * Zwraca zbiór walut w jakich są rachunki.
+   */
 
 
-    /**
-     * Zwraca mapę, gdzie kluczem jest typ rachunku a wartością kwota wszystkich środków na rachunkach tego typu
-     * przeliczona na złotówki.
-     */
-    //TODO: fix
-    // java.lang.AssertionError:
-    // Expected :87461.4992
-    // Actual   :87461.3999
+  /**
+   * Tworzy strumień rachunków.
+   */
 
 
-    /**
-     * Zwraca sumę kwadratów wieków wszystkich użytkowników.
-     */
+  /**
+   * Tworzy strumień użytkowników.
+   */
 
 
-    /**
-     * Metoda zwraca N losowych użytkowników (liczba jest stała). Skorzystaj z metody generate. Użytkownicy nie mogą się
-     * powtarzać, wszystkie zmienną muszą być final. Jeżeli podano liczbę większą niż liczba użytkowników należy
-     * wyrzucić wyjątek (bez zmiany sygnatury metody).
-     */
+  /**
+   * 38.
+   * Stwórz mapę gdzie kluczem jest typ rachunku a wartością mapa mężczyzn posiadających ten rachunek, gdzie kluczem
+   * jest obiekt User a wartością suma pieniędzy na rachunku danego typu przeliczona na złotkówki.
+   */
+  //TODO: zamiast Map<Stream<AccountType>, Map<User, BigDecimal>> metoda ma zwracać
+  // Map<AccountType>, Map<User, BigDecimal>>, zweryfikować działania metody
 
 
-    /**
-     * Zwraca strumień wszystkich firm.
-     */
+  /**
+   * 39. Policz ile pieniędzy w złotówkach jest na kontach osób które nie są ani kobietą ani mężczyzną.
+   */
 
 
-    /**
-     * Zwraca zbiór walut w jakich są rachunki.
-     */
-
-
-    /**
-     * Tworzy strumień rachunków.
-     */
-
-
-    /**
-     * Tworzy strumień użytkowników.
-     */
-
-
-    /**
-     * 38.
-     * Stwórz mapę gdzie kluczem jest typ rachunku a wartością mapa mężczyzn posiadających ten rachunek, gdzie kluczem
-     * jest obiekt User a wartością suma pieniędzy na rachunku danego typu przeliczona na złotkówki.
-     */
-    //TODO: zamiast Map<Stream<AccountType>, Map<User, BigDecimal>> metoda ma zwracać
-    // Map<AccountType>, Map<User, BigDecimal>>, zweryfikować działania metody
-
-
-    /**
-     * 39. Policz ile pieniędzy w złotówkach jest na kontach osób które nie są ani kobietą ani mężczyzną.
-     */
-
-
-    /**
-     * 40. Wymyśl treść polecenia i je zaimplementuj.
-     * Policz ile osób pełnoletnich posiada rachunek oraz ile osób niepełnoletnich posiada rachunek. Zwróć mapę
-     * przyjmując klucz True dla osób pełnoletnich i klucz False dla osób niepełnoletnich. Osoba pełnoletnia to osoba
-     * która ma więcej lub równo 18 lat
-     */
+  /**
+   * 40. Wymyśl treść polecenia i je zaimplementuj.
+   * Policz ile osób pełnoletnich posiada rachunek oraz ile osób niepełnoletnich posiada rachunek. Zwróć mapę
+   * przyjmując klucz True dla osób pełnoletnich i klucz False dla osób niepełnoletnich. Osoba pełnoletnia to osoba
+   * która ma więcej lub równo 18 lat
+   */
 
 }
