@@ -9,6 +9,7 @@ import java.math.RoundingMode;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 import java.util.stream.Collector;
@@ -250,10 +251,16 @@ class WorkShop {
       .get();
   }
 
-
   /**
    * Zwraca imiona użytkowników w formie zbioru, którzy spełniają podany warunek.
    */
+
+  public Set<String> findNamesByPredicate(Predicate<User> userPredicate) {
+    return getUserStream()
+      .filter(userPredicate)
+      .map(User::getFirstName)
+      .collect(Collectors.toSet());
+  }
 
 
   /**

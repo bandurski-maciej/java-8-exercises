@@ -4,10 +4,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl.klolo.workshops.domain.Account;
 import pl.klolo.workshops.domain.Currency;
+import pl.klolo.workshops.domain.Sex;
 
 import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -139,4 +141,10 @@ public class WorkShopTest {
     assertThat(new BigDecimal("572.00")).isEqualByComparingTo(workShop.calculateSumToPLN(List.of(account, account1)));
   }
 
+  @Test
+  void findNamesByPredicate() {
+    assertThat(Set.of("Adam", "Alfred", "Amadeusz")).containsExactlyInAnyOrderElementsOf(workShop.findNamesByPredicate(user -> user.getFirstName().startsWith("A")));
+    assertThat(16).isEqualTo(workShop.findNamesByPredicate(user -> user.getSex().equals(Sex.MAN)).size());
+
+  }
 }
