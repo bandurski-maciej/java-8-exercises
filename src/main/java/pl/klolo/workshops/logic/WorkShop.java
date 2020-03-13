@@ -5,6 +5,7 @@ import pl.klolo.workshops.mock.HoldingMockGenerator;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 import java.util.stream.Collector;
@@ -159,6 +160,11 @@ class WorkShop {
 
   }
 
+  /**
+   * Zwraca listę wszystkich walut w jakich są rachunki jako string, w którym wartości
+   * występują bez powtórzeń i są posortowane.
+   */
+
   public String findAllCurrenciesAsString() {
     return findCompaniesAsStream()
       .flatMap(company -> company.getUsers().stream()
@@ -171,17 +177,28 @@ class WorkShop {
   }
 
   /**
-   * Zwraca listę wszystkich walut w jakich są rachunki jako string, w którym wartości
-   * występują bez powtórzeń i są posortowane.
-   */
-
-
-  /**
    * Metoda zwraca analogiczne dane jak getAllCurrencies, jednak na utworzonym zbiorze nie uruchamiaj metody
    * stream, tylko skorzystaj z  Stream.generate. Wspólny kod wynieś do osobnej metody.
-   *
-   * @see #getAllCurrencies()
    */
+
+  String getAllCurrenciesUsingGenerate() {
+    final List<String> currencies = getAllCurrenciesToListAsString();
+
+    return Stream.generate(currencies.iterator()::next)
+      .limit(currencies.size())
+      .distinct()
+      .sorted()
+      .collect(Collectors.joining(", "));
+  }
+
+  private List<String> getAllCurrenciesToListAsString() {
+    return findCompaniesAsStream()
+      .flatMap(company -> company.getUsers().stream())
+      .flatMap(user -> user.getAccounts().stream())
+      .map(Account::getCurrency)
+      .map(c -> Objects.toString(c, null))
+      .collect(Collectors.toList());
+  }
 
 
   /**

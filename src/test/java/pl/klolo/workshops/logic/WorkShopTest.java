@@ -85,4 +85,9 @@ public class WorkShopTest {
   void findAllCurrenciesAsString() {
     assertEquals("CHF, EUR, PLN, USD", workShop.findAllCurrenciesAsString());
   }
+
+  @Test
+  void getAllCurrenciesUsingGenerate() {
+    assertEquals("CHF, EUR, PLN, USD", workShop.getAllCurrenciesUsingGenerate());
+  }
 }
