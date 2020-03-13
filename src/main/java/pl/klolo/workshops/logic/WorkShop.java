@@ -3,6 +3,9 @@ package pl.klolo.workshops.logic;
 import pl.klolo.workshops.domain.*;
 import pl.klolo.workshops.mock.HoldingMockGenerator;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -212,19 +215,40 @@ class WorkShop {
       .count();
   }
 
-  private Stream<User> getUserStream() {
+  public Stream<User> getUserStream() {
     return findCompaniesAsStream()
       .flatMap(company -> company.getUsers().stream());
   }
+
 
   /**
    * Przelicza kwotę na rachunku na złotówki za pomocą kursu określonego w enum Currency.
    */
 
+  public BigDecimal calculateToPLN(Account account) {
+    return account
+      .getAmount()
+      .multiply(BigDecimal.valueOf(account.getCurrency().rate))
+      .round(new MathContext(4, RoundingMode.HALF_UP));
+
+  }
+
 
   /**
    * Przelicza kwotę na podanych rachunkach na złotówki za pomocą kursu określonego w enum Currency i sumuje ją.
    */
+
+  public List<BigDecimal> calculateListToPLN(List<Account> account) {
+    return account.stream()
+      .map(this::calculateToPLN)
+      .collect(Collectors.toList());
+  }
+
+  public BigDecimal calculateSumToPLN(List<Account> accounts) {
+    return calculateListToPLN(accounts).stream()
+      .reduce(BigDecimal::add)
+      .get();
+  }
 
 
   /**

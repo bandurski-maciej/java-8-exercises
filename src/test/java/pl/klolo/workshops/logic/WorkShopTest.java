@@ -2,7 +2,10 @@ package pl.klolo.workshops.logic;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import pl.klolo.workshops.domain.Account;
+import pl.klolo.workshops.domain.Currency;
 
+import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -95,4 +98,45 @@ public class WorkShopTest {
   void findAmountOfWomen() {
     assertEquals(4, workShop.findAmountOfWomen());
   }
+
+  @Test
+  void calculateToPLN() {
+    final Account account = Account.builder()
+      .amount(new BigDecimal("1.0"))
+      .currency(Currency.PLN)
+      .build();
+
+    assertEquals(new BigDecimal("1.00"), workShop.calculateToPLN(account));
+  }
+
+  @Test
+  void calculateListToPLN() {
+    final Account account = Account.builder()
+      .amount(new BigDecimal("3.72"))
+      .currency(Currency.USD)
+      .build();
+
+    final Account account1 = Account.builder()
+      .amount(new BigDecimal("1.0"))
+      .currency(Currency.PLN)
+      .build();
+
+    assertThat(List.of(new BigDecimal("1.00"), new BigDecimal("13.84"))).hasSameElementsAs(workShop.calculateListToPLN(List.of(account, account1)));
+  }
+
+  @Test
+  void calculateSumToPLN() {
+    final Account account = Account.builder()
+      .amount(new BigDecimal("100"))
+      .currency(Currency.USD)
+      .build();
+
+    final Account account1 = Account.builder()
+      .amount(new BigDecimal("200"))
+      .currency(Currency.PLN)
+      .build();
+
+    assertThat(new BigDecimal("572.00")).isEqualByComparingTo(workShop.calculateSumToPLN(List.of(account, account1)));
+  }
+
 }
