@@ -7,6 +7,7 @@ import pl.klolo.workshops.domain.Currency;
 import pl.klolo.workshops.domain.Sex;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -151,6 +152,14 @@ public class WorkShopTest {
   @Test
   void findOlderThanNotManNamesAsList() {
     assertThat(List.of("Marta", "Mariusz", "Magdalena", "Zosia")).hasSameElementsAs(workShop.findOlderThanNotManNamesAsList(30));
+
+  }
+
+  @Test
+  void executeForEachCompany() {
+    List<String> companyNames = new ArrayList<>();
+    workShop.executeForEachCompany(company -> companyNames.add(company.getName()));
+    assertThat(List.of("Fanta", "Sprite", "Nescafe", "Gerber", "Nestea", "Lays", "Pepsi", "Mirinda")).hasSameElementsAs(companyNames);
 
   }
 }

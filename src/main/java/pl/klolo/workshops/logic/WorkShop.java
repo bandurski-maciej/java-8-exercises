@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -262,24 +263,27 @@ class WorkShop {
       .collect(Collectors.toSet());
   }
 
+  /**
+   * Metoda filtruje użytkowników starszych niż podany jako parametr wiek, wyświetla ich na konsoli, odrzuca mężczyzn
+   * i zwraca ich imiona w formie listy.
+   */
+
   public List<String> findOlderThanNotManNamesAsList(int age) {
     return getUserStream()
       .filter(user -> user.getSex() != Sex.MAN)
       .filter(user -> user.getAge() >= age)
       .map(User::getFirstName)
       .collect(Collectors.toList());
+
   }
-
-  /**
-   * Metoda filtruje użytkowników starszych niż podany jako parametr wiek, wyświetla ich na konsoli, odrzuca mężczyzn
-   * i zwraca ich imiona w formie listy.
-   */
-
 
   /**
    * Dla każdej firmy uruchamia przekazaną metodę.
    */
 
+  public void executeForEachCompany(Consumer<Company> companyConsumer) {
+    findCompaniesAsStream().forEach(companyConsumer);
+  }
 
   /**
    * Wyszukuje najbogatsza kobietę i zwraca ją. Metoda musi uzwględniać to że rachunki są w różnych walutach.
