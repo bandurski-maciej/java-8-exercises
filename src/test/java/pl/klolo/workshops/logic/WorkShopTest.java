@@ -147,4 +147,10 @@ public class WorkShopTest {
     assertThat(16).isEqualTo(workShop.findNamesByPredicate(user -> user.getSex().equals(Sex.MAN)).size());
 
   }
+
+  @Test
+  void findOlderThanNotManNamesAsList() {
+    assertThat(List.of("Marta", "Mariusz", "Magdalena", "Zosia")).hasSameElementsAs(workShop.findOlderThanNotManNamesAsList(30));
+
+  }
 }

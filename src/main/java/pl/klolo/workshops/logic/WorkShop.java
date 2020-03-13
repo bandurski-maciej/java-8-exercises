@@ -262,6 +262,13 @@ class WorkShop {
       .collect(Collectors.toSet());
   }
 
+  public List<String> findOlderThanNotManNamesAsList(int age) {
+    return getUserStream()
+      .filter(user -> user.getSex() != Sex.MAN)
+      .filter(user -> user.getAge() >= age)
+      .map(User::getFirstName)
+      .collect(Collectors.toList());
+  }
 
   /**
    * Metoda filtruje użytkowników starszych niż podany jako parametr wiek, wyświetla ich na konsoli, odrzuca mężczyzn
