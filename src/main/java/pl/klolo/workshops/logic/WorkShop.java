@@ -206,6 +206,16 @@ class WorkShop {
    * w osobnej metodzie. Predicate określający czy mamy do czynienia z kobietą niech będzie polem statycznym w klasie.
    */
 
+  public long findAmountOfWomen() {
+    return getUserStream()
+      .filter(isWoman)
+      .count();
+  }
+
+  private Stream<User> getUserStream() {
+    return findCompaniesAsStream()
+      .flatMap(company -> company.getUsers().stream());
+  }
 
   /**
    * Przelicza kwotę na rachunku na złotówki za pomocą kursu określonego w enum Currency.

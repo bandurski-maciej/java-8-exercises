@@ -90,4 +90,9 @@ public class WorkShopTest {
   void getAllCurrenciesUsingGenerate() {
     assertEquals("CHF, EUR, PLN, USD", workShop.getAllCurrenciesUsingGenerate());
   }
+
+  @Test
+  void findAmountOfWomen() {
+    assertEquals(4, workShop.findAmountOfWomen());
+  }
 }
