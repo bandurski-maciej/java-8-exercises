@@ -6,10 +6,7 @@ import pl.klolo.workshops.mock.HoldingMockGenerator;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -289,6 +286,18 @@ class WorkShop {
    * Wyszukuje najbogatsza kobietę i zwraca ją. Metoda musi uzwględniać to że rachunki są w różnych walutach.
    */
   //pomoc w rozwiązaniu problemu w zadaniu: https://stackoverflow.com/a/55052733/9360524
+  public BigDecimal findWomanAccountAmountInPln(User user) {
+    return user.getAccounts().stream()
+      .map(this::calculateToPLN)
+      .reduce(BigDecimal.ZERO, BigDecimal::add);
+  }
+
+  public User findRichestWoman() throws Exception {
+    return getUserStream()
+      .filter(user -> user.getSex().equals(Sex.WOMAN))
+      .max(Comparator.comparing(this::findWomanAccountAmountInPln))
+      .orElseThrow(Exception::new);
+  }
 
 
   /**

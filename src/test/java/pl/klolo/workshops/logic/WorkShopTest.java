@@ -162,4 +162,9 @@ public class WorkShopTest {
     assertThat(List.of("Fanta", "Sprite", "Nescafe", "Gerber", "Nestea", "Lays", "Pepsi", "Mirinda")).hasSameElementsAs(companyNames);
 
   }
+
+  @Test
+  void findRichestWoman() throws Exception {
+    assertThat("Zosia").isEqualTo(workShop.findRichestWoman().getFirstName());
+  }
 }
