@@ -9,6 +9,7 @@ import java.math.RoundingMode;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -318,6 +319,21 @@ class WorkShop {
    * Pierwsza instrukcja metody to return.
    */
 
+  public AccountType findMostPopularAccountType() {
+    return getAccountStream()
+      .map(Account::getType)
+      .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+      .entrySet()
+      .stream()
+      .max(Map.Entry.comparingByValue())
+      .map(Map.Entry::getKey)
+      .orElseThrow(IllformedLocaleException::new);
+  }
+
+  public Stream<Account> getAccountStream() {
+    return getUserStream()
+      .flatMap(user -> user.getAccounts().stream());
+  }
 
   /**
    * Zwraca pierwszego z brzegu użytkownika dla podanego warunku. W przypadku kiedy nie znajdzie użytkownika wyrzuca

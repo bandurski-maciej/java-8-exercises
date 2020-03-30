@@ -3,6 +3,7 @@ package pl.klolo.workshops.logic;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl.klolo.workshops.domain.Account;
+import pl.klolo.workshops.domain.AccountType;
 import pl.klolo.workshops.domain.Currency;
 import pl.klolo.workshops.domain.Sex;
 
@@ -171,5 +172,10 @@ public class WorkShopTest {
   @Test
   void findFistNCompaniesNames() {
     assertThat(2).isEqualTo(workShop.findFistNCompaniesNames(2).size());
+  }
+
+  @Test
+  void findMostPopularAccountType() {
+    assertThat(AccountType.ROR1).isEqualTo(workShop.findMostPopularAccountType());
   }
 }
