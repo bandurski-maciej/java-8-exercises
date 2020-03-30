@@ -335,6 +335,13 @@ class WorkShop {
       .flatMap(user -> user.getAccounts().stream());
   }
 
+  public User findUserMatchedToPredicate(Predicate<User> predicate) {
+    return getUserStream()
+      .filter(predicate)
+      .findFirst()
+      .orElseThrow(IllegalArgumentException::new);
+  }
+
   /**
    * Zwraca pierwszego z brzegu użytkownika dla podanego warunku. W przypadku kiedy nie znajdzie użytkownika wyrzuca
    * wyjątek IllegalArgumentException.

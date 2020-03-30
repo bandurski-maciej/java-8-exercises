@@ -178,4 +178,9 @@ public class WorkShopTest {
   void findMostPopularAccountType() {
     assertThat(AccountType.ROR1).isEqualTo(workShop.findMostPopularAccountType());
   }
+
+  @Test
+  void findUserMatchedToPredicate() {
+    assertThat("Bartek").isEqualTo(workShop.findUserMatchedToPredicate(user -> user.getFirstName().equals("Bartek")).getFirstName());
+  }
 }
