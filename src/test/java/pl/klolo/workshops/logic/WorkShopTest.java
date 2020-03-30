@@ -167,4 +167,9 @@ public class WorkShopTest {
   void findRichestWoman() throws Exception {
     assertThat("Zosia").isEqualTo(workShop.findRichestWoman().getFirstName());
   }
+
+  @Test
+  void findFistNCompaniesNames() {
+    assertThat(2).isEqualTo(workShop.findFistNCompaniesNames(2).size());
+  }
 }

@@ -299,10 +299,17 @@ class WorkShop {
       .orElseThrow(Exception::new);
   }
 
-
   /**
    * Zwraca nazwy pierwszych N firm. Kolejność nie ma znaczenia.
    */
+
+  public List<String> findFistNCompaniesNames(int n) {
+    return holdings.stream()
+      .flatMap(holding -> holding.getCompanies().stream())
+      .limit(n)
+      .map(Company::getName)
+      .collect(Collectors.toList());
+  }
 
 
   /**
