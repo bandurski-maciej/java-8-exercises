@@ -330,6 +330,11 @@ class WorkShop {
       .orElseThrow(IllformedLocaleException::new);
   }
 
+  /**
+   * Zwraca pierwszego z brzegu użytkownika dla podanego warunku. W przypadku kiedy nie znajdzie użytkownika wyrzuca
+   * wyjątek IllegalArgumentException.
+   */
+
   public Stream<Account> getAccountStream() {
     return getUserStream()
       .flatMap(user -> user.getAccounts().stream());
@@ -341,12 +346,6 @@ class WorkShop {
       .findFirst()
       .orElseThrow(IllegalArgumentException::new);
   }
-
-  /**
-   * Zwraca pierwszego z brzegu użytkownika dla podanego warunku. W przypadku kiedy nie znajdzie użytkownika wyrzuca
-   * wyjątek IllegalArgumentException.
-   */
-
 
   /**
    * Zwraca mapę firm, gdzie kluczem jest jej nazwa a wartością lista pracowników.
