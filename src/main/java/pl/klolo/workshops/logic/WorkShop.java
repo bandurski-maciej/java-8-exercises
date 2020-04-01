@@ -15,6 +15,8 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.summingInt;
+
 class WorkShop {
   /**
    * Lista holdingów wczytana z mocka.
@@ -347,10 +349,16 @@ class WorkShop {
       .orElseThrow(IllegalArgumentException::new);
   }
 
+
   /**
    * Zwraca mapę firm, gdzie kluczem jest jej nazwa a wartością lista pracowników.
    */
 
+  public Map<String, Integer> getCompanyMapWithEmployeeAmount() {
+    return findCompaniesAsStream()
+      .collect(Collectors.groupingBy(Company::getName, summingInt(company -> company.getUsers().size())));
+
+  }
 
   /**
    * Zwraca mapę firm, gdzie kluczem jest jej nazwa a wartością lista pracowników przechowywanych jako String

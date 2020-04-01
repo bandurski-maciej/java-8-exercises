@@ -8,10 +8,7 @@ import pl.klolo.workshops.domain.Currency;
 import pl.klolo.workshops.domain.Sex;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -182,5 +179,14 @@ public class WorkShopTest {
   @Test
   void findUserMatchedToPredicate() {
     assertThat("Bartek").isEqualTo(workShop.findUserMatchedToPredicate(user -> user.getFirstName().equals("Bartek")).getFirstName());
+  }
+
+  @Test
+  void getCompanyMapWithEmployeeAmount() {
+
+    assertThat(workShop.getCompanyMapWithEmployeeAmount()).contains(Map.entry("Fanta", 3));
+    assertThat(workShop.getCompanyMapWithEmployeeAmount()).contains(Map.entry("Sprite", 2));
+    assertThat(workShop.getCompanyMapWithEmployeeAmount()).contains(Map.entry("Nescafe", 4));
+
   }
 }
