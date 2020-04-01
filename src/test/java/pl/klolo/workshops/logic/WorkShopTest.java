@@ -189,4 +189,17 @@ public class WorkShopTest {
     assertThat(workShop.getCompanyMapWithEmployeeAmount()).contains(Map.entry("Nescafe", 4));
 
   }
+
+  @Test
+  void getCompanyMapWithEmployeeAmountAsString() {
+    assertThat(workShop.getCompanyMapWithEmployeeAmountAsString()).contains(Map.entry("Fanta", List.of("Adam Wojcik", "Mateusz Kowalski", "Bartek Pasibrzuch").toString()));
+
+  }
+
+  @Test
+  void getCompanyMapWithEmployeeAmountAsList() {
+    assertThat(workShop.getCompanyMapWithEmployeeAmountAsList(user -> user.getFirstName() + " " + user.getLastName())).contains(Map.entry("Fanta", List.of("Adam Wojcik", "Mateusz Kowalski", "Bartek Pasibrzuch")));
+
+  }
+
 }

@@ -365,13 +365,27 @@ class WorkShop {
    * składający się z imienia i nazwiska. Podpowiedź:  Możesz skorzystać z metody entrySet.
    */
 
+  public Map<String, String> getCompanyMapWithEmployeeAmountAsString() {
+    return findCompaniesAsStream()
+      .collect(Collectors.toMap(Company::getName, company -> company.getUsers().stream()
+        .map(user -> user.getFirstName() + " " + user.getLastName())
+        .collect(Collectors.toList())
+        .toString()));
+
+  }
 
   /**
    * Zwraca mapę firm, gdzie kluczem jest jej nazwa a wartością lista pracowników przechowywanych jako obiekty
    * typu T, tworzonych za pomocą przekazanej funkcji.
    */
   //pomoc w rozwiązaniu problemu w zadaniu: https://stackoverflow.com/a/54969615/9360524
+  public <T> Map<String, List<T>> getCompanyMapWithEmployeeAmountAsList(final Function<User, T> converter) {
+    return findCompaniesAsStream()
+      .collect(Collectors.toMap(Company::getName, company -> company.getUsers().stream()
+        .map(converter)
+        .collect(Collectors.toList())));
 
+  }
 
   /**
    * Zwraca mapę gdzie kluczem jest flaga mówiąca o tym czy mamy do czynienia z mężczyzną, czy z kobietą.
