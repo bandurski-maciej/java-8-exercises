@@ -392,6 +392,11 @@ class WorkShop {
    * Osoby "innej" płci mają zostać zignorowane. Wartością jest natomiast zbiór nazwisk tych osób.
    */
 
+  public Map<Boolean, Long> getUserMapWithUserGenderAndAmount() {
+    return getUserStream()
+      .filter(user -> !user.getSex().equals(Sex.OTHER))
+      .collect(Collectors.partitioningBy(user -> user.getSex().equals(Sex.WOMAN), Collectors.counting()));
+  }
 
   /**
    * Zwraca mapę rachunków, gdzie kluczem jest numer rachunku, a wartością ten rachunek.

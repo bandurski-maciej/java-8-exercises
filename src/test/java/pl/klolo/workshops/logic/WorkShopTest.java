@@ -202,4 +202,11 @@ public class WorkShopTest {
 
   }
 
+  @Test
+  void getUserMapWithUserGenderAndAmount() {
+    assertThat(workShop.getUserMapWithUserGenderAndAmount()).contains(Map.entry(true, 4L));
+    assertThat(workShop.getUserMapWithUserGenderAndAmount()).contains(Map.entry(false, 13L));
+
+  }
+
 }
