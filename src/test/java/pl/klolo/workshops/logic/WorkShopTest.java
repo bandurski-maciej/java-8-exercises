@@ -257,8 +257,8 @@ public class WorkShopTest {
   @Test
   void shouldReturnInfoAboutUserAge() {
     assertThat(workShop.getInfoAboutUserAge(Optional.of(workShop.findUser(user1 -> user1.getFirstName()
-      .equals("Bartek"))))
-      .contains("BARTEK PASIBRZUCH ma lat 18"));
+      .equals("Bartek")))))
+      .contains("BARTEK PASIBRZUCH ma lat 18");
     assertThat(workShop.getInfoAboutUserAge(Optional.empty()))
       .contains("Brak użytkownika");
   }
@@ -266,6 +266,16 @@ public class WorkShopTest {
   @Test
   void shouldReturnNamesAndSurnamesSortedReversed() {
     assertThat(workShop.getNamesAndSurnamesSortedReversed()).contains("Zosia Psikuta, Zenon Kucowski, Zenek Biednapalka");
+  }
+
+  @Test
+  void shouldReturnMapWithAccountTypeAndAmountDenominatedInPLN() {
+    assertThat(workShop.getMapWithAccountTypeAndAmountDenominatedInPLN()).contains(Map.entry(AccountType.LO2, BigDecimal.valueOf(87038)));
+  }
+
+  @Test
+  void shouldReturnSquareSumOfAge() {
+    assertThat(workShop.getSquareSumOfAge()).isEqualTo(27720);
   }
 
 }

@@ -1,5 +1,6 @@
 package pl.klolo.workshops.logic;
 
+import pl.klolo.workshops.domain.Currency;
 import pl.klolo.workshops.domain.*;
 import pl.klolo.workshops.mock.HoldingMockGenerator;
 
@@ -44,7 +45,6 @@ class WorkShop {
       .count();
 
   }
-
 
   /**
    * Zwraca nazwy wszystkich holdingów pisane z małej litery w formie listy.
@@ -98,11 +98,6 @@ class WorkShop {
    * Zwraca listę wszystkich nazw firm w formie listy. Tworzenie strumienia firm umieść w osobnej metodzie którą
    * później będziesz wykorzystywać.
    */
-
-  public Stream<Company> findCompaniesAsStream() {
-    return holdings.stream()
-      .flatMap(holding -> holding.getCompanies().stream());
-  }
 
   public List<String> findCompaniesNamesAsList() {
     return findCompaniesAsStream()
@@ -214,11 +209,6 @@ class WorkShop {
    * w osobnej metodzie. Predicate określający czy mamy do czynienia z kobietą niech będzie polem statycznym w klasie.
    */
 
-  public long findAmountOfWomen() {
-    return getUserStream()
-      .filter(isWoman)
-      .count();
-  }
 
   public Stream<User> getUserStream() {
     return findCompaniesAsStream()
@@ -339,11 +329,6 @@ class WorkShop {
    * Zwraca pierwszego z brzegu użytkownika dla podanego warunku. W przypadku kiedy nie znajdzie użytkownika wyrzuca
    * wyjątek IllegalArgumentException.
    */
-
-  public Stream<Account> getAccountStream() {
-    return getUserStream()
-      .flatMap(user -> user.getAccounts().stream());
-  }
 
   public User findUserMatchedToPredicate(Predicate<User> predicate) {
     return getUserStream()
@@ -480,6 +465,11 @@ class WorkShop {
 
   }
 
+  /**
+   * Metoda wypisuje na ekranie wszystkich użytkowników (imię, nazwisko) posortowanych od z do a.
+   * Zosia Psikuta, Zenon Kucowski, Zenek Jawowy ... Alfred Pasibrzuch, Adam Wojcik
+   */
+
   public String getNamesAndSurnamesSortedReversed() {
     return getUserStream()
       .sorted(Comparator.comparing(User::getFirstName).reversed())
@@ -489,12 +479,6 @@ class WorkShop {
   }
 
   /**
-   * Metoda wypisuje na ekranie wszystkich użytkowników (imię, nazwisko) posortowanych od z do a.
-   * Zosia Psikuta, Zenon Kucowski, Zenek Jawowy ... Alfred Pasibrzuch, Adam Wojcik
-   */
-
-
-  /**
    * Zwraca mapę, gdzie kluczem jest typ rachunku a wartością kwota wszystkich środków na rachunkach tego typu
    * przeliczona na złotówki.
    */
@@ -502,37 +486,68 @@ class WorkShop {
   // java.lang.AssertionError:
   // Expected :87461.4992
   // Actual   :87461.3999
-
+  public Map<AccountType, BigDecimal> getMapWithAccountTypeAndAmountDenominatedInPLN() {
+    return getAccountStream()
+      .collect(Collectors.toMap(Account::getType, this::calculateToPLN, BigDecimal::add));
+  }
 
   /**
    * Zwraca sumę kwadratów wieków wszystkich użytkowników.
    */
 
-
-  /**
-   * Metoda zwraca N losowych użytkowników (liczba jest stała). Skorzystaj z metody generate. Użytkownicy nie mogą się
-   * powtarzać, wszystkie zmienną muszą być final. Jeżeli podano liczbę większą niż liczba użytkowników należy
-   * wyrzucić wyjątek (bez zmiany sygnatury metody).
-   */
+  public int getSquareSumOfAge() {
+    return getUserStream()
+      .mapToInt(User::getAge)
+      .map(p -> (int) Math.pow(p, 2))
+      .sum();
+  }
 
 
   /**
    * Zwraca strumień wszystkich firm.
    */
 
+  public Stream<Company> findCompaniesAsStream() {
+    return holdings.stream()
+      .flatMap(holding -> holding.getCompanies().stream());
+  }
 
   /**
    * Zwraca zbiór walut w jakich są rachunki.
    */
+
+  private Set<Currency> getAllCurrenciesToSet() {
+    return findCompaniesAsStream()
+      .flatMap(company -> company.getUsers().stream())
+      .flatMap(user -> user.getAccounts().stream())
+      .map(Account::getCurrency)
+      .collect(Collectors.toSet());
+  }
 
 
   /**
    * Tworzy strumień rachunków.
    */
 
+  public Stream<Account> getAccountStream() {
+    return getUserStream()
+      .flatMap(user -> user.getAccounts().stream());
+  }
 
   /**
    * Tworzy strumień użytkowników.
+   */
+
+  public long findAmountOfWomen() {
+    return getUserStream()
+      .filter(isWoman)
+      .count();
+  }
+
+  /**
+   * Metoda zwraca N losowych użytkowników (liczba jest stała). Skorzystaj z metody generate. Użytkownicy nie mogą się
+   * powtarzać, wszystkie zmienną muszą być final. Jeżeli podano liczbę większą niż liczba użytkowników należy
+   * wyrzucić wyjątek (bez zmiany sygnatury metody).
    */
 
 
