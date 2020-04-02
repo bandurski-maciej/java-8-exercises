@@ -457,6 +457,13 @@ class WorkShop {
    * Zwraca użytkownika, który spełnia podany warunek.
    */
 
+  public User findUser(Predicate<User> predicate) {
+    return getUserStream()
+      .filter(predicate)
+      .findFirst()
+      .orElseThrow();
+
+  }
 
   /**
    * Dla podanego użytkownika zwraca informacje o tym ile ma lat w formie:

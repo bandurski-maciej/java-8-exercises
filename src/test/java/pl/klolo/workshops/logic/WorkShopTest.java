@@ -235,4 +235,9 @@ public class WorkShopTest {
     workShop.saveAccountsInFile("accounts.txt");
   }
 
+  @Test
+  void findUser() {
+    assertThat("Bartek").isEqualTo(workShop.findUserMatchedToPredicate(user -> user.getFirstName().equals("Bartek")).getFirstName());
+  }
+
 }
