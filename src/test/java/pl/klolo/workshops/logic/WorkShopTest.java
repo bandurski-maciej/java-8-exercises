@@ -263,4 +263,9 @@ public class WorkShopTest {
       .contains("Brak użytkownika");
   }
 
+  @Test
+  void shouldReturnNamesAndSurnamesSortedReversed() {
+    assertThat(workShop.getNamesAndSurnamesSortedReversed()).contains("Zosia Psikuta, Zenon Kucowski, Zenek Biednapalka");
+  }
+
 }

@@ -480,6 +480,14 @@ class WorkShop {
 
   }
 
+  public String getNamesAndSurnamesSortedReversed() {
+    return getUserStream()
+      .sorted(Comparator.comparing(User::getFirstName).reversed())
+      .map(user -> user.getFirstName() + " " + user.getLastName() + ", ")
+      .collect(Collectors.joining());
+
+  }
+
   /**
    * Metoda wypisuje na ekranie wszystkich użytkowników (imię, nazwisko) posortowanych od z do a.
    * Zosia Psikuta, Zenon Kucowski, Zenek Jawowy ... Alfred Pasibrzuch, Adam Wojcik
