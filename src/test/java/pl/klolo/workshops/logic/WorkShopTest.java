@@ -9,6 +9,7 @@ import pl.klolo.workshops.domain.Sex;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -220,6 +221,12 @@ public class WorkShopTest {
   @Test
   void findUserNamesAsString() {
     assertThat(workShop.findUserNamesAsString()).contains("Adam Alfred");
+  }
+
+  @Test
+  void getUserSetLimitedTo10() {
+    assertThat(workShop.getUserSetLimitedTo10()).hasSize(10);
+    assertThat(workShop.getUserSetLimitedTo10()).isSubsetOf(workShop.getUserStream().collect(Collectors.toSet()));
   }
 
 }

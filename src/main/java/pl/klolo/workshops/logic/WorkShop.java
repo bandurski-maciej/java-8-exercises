@@ -408,6 +408,10 @@ class WorkShop {
       .collect(Collectors.toMap(Account::getNumber, Function.identity()));
   }
 
+  /**
+   * Zwraca listę wszystkich imion w postaci Stringa, gdzie imiona oddzielone są spacją i nie zawierają powtórzeń.
+   */
+
   public String findUserNamesAsString() {
     return getUserStream()
       .map(User::getFirstName)
@@ -418,13 +422,14 @@ class WorkShop {
 
 
   /**
-   * Zwraca listę wszystkich imion w postaci Stringa, gdzie imiona oddzielone są spacją i nie zawierają powtórzeń.
-   */
-
-
-  /**
    * Zwraca zbiór wszystkich użytkowników. Jeżeli jest ich więcej niż 10 to obcina ich ilość do 10.
    */
+
+  public Set<User> getUserSetLimitedTo10() {
+    return getUserStream()
+      .limit(10)
+      .collect(Collectors.toSet());
+  }
 
 
   /**
