@@ -58,13 +58,15 @@ public class WorkShopTest {
 
   @Test
   void findCompaniesNamesAsList() {
-    assertThat(List.of("Fanta", "Sprite", "Nescafe", "Gerber", "Nestea", "Lays", "Pepsi", "Mirinda")).hasSameElementsAs(workShop.findCompaniesNamesAsList());
+    assertThat(List.of("Fanta", "Sprite", "Nescafe", "Gerber", "Nestea", "Lays", "Pepsi", "Mirinda"))
+      .hasSameElementsAs(workShop.findCompaniesNamesAsList());
 
   }
 
   @Test
   void findCompaniesAsLinkedList() {
-    assertThat(List.of("Fanta", "Sprite", "Nescafe", "Gerber", "Nestea", "Lays", "Pepsi", "Mirinda")).hasSameElementsAs(workShop.findCompaniesAsLinkedList());
+    assertThat(List.of("Fanta", "Sprite", "Nescafe", "Gerber", "Nestea", "Lays", "Pepsi", "Mirinda"))
+      .hasSameElementsAs(workShop.findCompaniesAsLinkedList());
     assertThat(workShop.findCompaniesAsLinkedList()).isInstanceOf(LinkedList.class);
 
   }
@@ -89,12 +91,14 @@ public class WorkShopTest {
 
   @Test
   void findAllCurrenciesAsString() {
-    assertEquals("CHF, EUR, PLN, USD", workShop.findAllCurrenciesAsString());
+    assertEquals("CHF, EUR, PLN, USD",
+      workShop.findAllCurrenciesAsString());
   }
 
   @Test
   void getAllCurrenciesUsingGenerate() {
-    assertEquals("CHF, EUR, PLN, USD", workShop.getAllCurrenciesUsingGenerate());
+    assertEquals("CHF, EUR, PLN, USD",
+      workShop.getAllCurrenciesUsingGenerate());
   }
 
   @Test
@@ -124,7 +128,8 @@ public class WorkShopTest {
       .currency(Currency.PLN)
       .build();
 
-    assertThat(List.of(new BigDecimal("1.00"), new BigDecimal("13.84"))).hasSameElementsAs(workShop.calculateListToPLN(List.of(account, account1)));
+    assertThat(List.of(new BigDecimal("1.00"), new BigDecimal("13.84")))
+      .hasSameElementsAs(workShop.calculateListToPLN(List.of(account, account1)));
   }
 
   @Test
@@ -144,14 +149,16 @@ public class WorkShopTest {
 
   @Test
   void findNamesByPredicate() {
-    assertThat(Set.of("Adam", "Alfred", "Amadeusz")).containsExactlyInAnyOrderElementsOf(workShop.findNamesByPredicate(user -> user.getFirstName().startsWith("A")));
+    assertThat(Set.of("Adam", "Alfred", "Amadeusz"))
+      .containsExactlyInAnyOrderElementsOf(workShop.findNamesByPredicate(user -> user.getFirstName().startsWith("A")));
     assertThat(16).isEqualTo(workShop.findNamesByPredicate(user -> user.getSex().equals(Sex.MAN)).size());
 
   }
 
   @Test
   void findOlderThanNotManNamesAsList() {
-    assertThat(List.of("Marta", "Mariusz", "Magdalena", "Zosia")).hasSameElementsAs(workShop.findOlderThanNotManNamesAsList(30));
+    assertThat(List.of("Marta", "Mariusz", "Magdalena", "Zosia"))
+      .hasSameElementsAs(workShop.findOlderThanNotManNamesAsList(30));
 
   }
 
@@ -159,7 +166,8 @@ public class WorkShopTest {
   void executeForEachCompany() {
     List<String> companyNames = new ArrayList<>();
     workShop.executeForEachCompany(company -> companyNames.add(company.getName()));
-    assertThat(List.of("Fanta", "Sprite", "Nescafe", "Gerber", "Nestea", "Lays", "Pepsi", "Mirinda")).hasSameElementsAs(companyNames);
+    assertThat(List.of("Fanta", "Sprite", "Nescafe", "Gerber", "Nestea", "Lays", "Pepsi", "Mirinda"))
+      .hasSameElementsAs(companyNames);
 
   }
 
@@ -180,7 +188,8 @@ public class WorkShopTest {
 
   @Test
   void findUserMatchedToPredicate() {
-    assertThat("Bartek").isEqualTo(workShop.findUserMatchedToPredicate(user -> user.getFirstName().equals("Bartek")).getFirstName());
+    assertThat("Bartek").isEqualTo(workShop.findUserMatchedToPredicate(user -> user.getFirstName()
+      .equals("Bartek")).getFirstName());
   }
 
   @Test
@@ -194,13 +203,16 @@ public class WorkShopTest {
 
   @Test
   void getCompanyMapWithEmployeeAmountAsString() {
-    assertThat(workShop.getCompanyMapWithEmployeeAmountAsString()).contains(Map.entry("Fanta", List.of("Adam Wojcik", "Mateusz Kowalski", "Bartek Pasibrzuch").toString()));
+    assertThat(workShop.getCompanyMapWithEmployeeAmountAsString())
+      .contains(Map.entry("Fanta", List.of("Adam Wojcik", "Mateusz Kowalski", "Bartek Pasibrzuch").toString()));
 
   }
 
   @Test
   void getCompanyMapWithEmployeeAmountAsList() {
-    assertThat(workShop.getCompanyMapWithEmployeeAmountAsList(user -> user.getFirstName() + " " + user.getLastName())).contains(Map.entry("Fanta", List.of("Adam Wojcik", "Mateusz Kowalski", "Bartek Pasibrzuch")));
+    assertThat(workShop.getCompanyMapWithEmployeeAmountAsList(
+      user -> user.getFirstName() + " " + user.getLastName()))
+      .contains(Map.entry("Fanta", List.of("Adam Wojcik", "Mateusz Kowalski", "Bartek Pasibrzuch")));
 
   }
 
@@ -213,10 +225,11 @@ public class WorkShopTest {
 
   @Test
   void getAccountsMapWithAccountNumberAndAccount() {
-    assertThat(workShop.getAccountsMapWithAccountNumberAndAccount()).contains(Map.entry("8474", workShop.getAccountStream()
-      .filter(account -> account.getNumber().equals("8474"))
-      .findFirst()
-      .orElseThrow()));
+    assertThat(workShop.getAccountsMapWithAccountNumberAndAccount()).contains(Map.entry("8474",
+      workShop.getAccountStream()
+        .filter(account -> account.getNumber().equals("8474"))
+        .findFirst()
+        .orElseThrow()));
   }
 
   @Test
@@ -237,7 +250,17 @@ public class WorkShopTest {
 
   @Test
   void findUser() {
-    assertThat("Bartek").isEqualTo(workShop.findUserMatchedToPredicate(user -> user.getFirstName().equals("Bartek")).getFirstName());
+    assertThat("Bartek").isEqualTo(workShop.findUserMatchedToPredicate(user -> user.getFirstName()
+      .equals("Bartek")).getFirstName());
+  }
+
+  @Test
+  void shouldReturnInfoAboutUserAge() {
+    assertThat(workShop.getInfoAboutUserAge(Optional.of(workShop.findUser(user1 -> user1.getFirstName()
+      .equals("Bartek"))))
+      .contains("BARTEK PASIBRZUCH ma lat 18"));
+    assertThat(workShop.getInfoAboutUserAge(Optional.empty()))
+      .contains("Brak użytkownika");
   }
 
 }

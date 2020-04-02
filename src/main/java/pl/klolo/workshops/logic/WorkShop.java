@@ -252,7 +252,7 @@ class WorkShop {
   public BigDecimal calculateSumToPLN(List<Account> accounts) {
     return calculateListToPLN(accounts).stream()
       .reduce(BigDecimal::add)
-      .get();
+      .orElseThrow();
   }
 
   /**
@@ -472,6 +472,13 @@ class WorkShop {
    * Uwaga: W prawdziwym kodzie nie przekazuj Optionali jako parametrów.
    */
 
+  public String getInfoAboutUserAge(Optional<User> user) {
+    return user.flatMap(u -> getUserStream()
+      .filter(user1 -> user1.equals(user.get())).findFirst())
+      .map(user1 -> user1.getFirstName().toUpperCase() + " " + user1.getLastName().toUpperCase() + " ma lat " + user1.getAge())
+      .orElse("Brak użytkownika");
+
+  }
 
   /**
    * Metoda wypisuje na ekranie wszystkich użytkowników (imię, nazwisko) posortowanych od z do a.
