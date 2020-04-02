@@ -7,6 +7,7 @@ import pl.klolo.workshops.domain.AccountType;
 import pl.klolo.workshops.domain.Currency;
 import pl.klolo.workshops.domain.Sex;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -227,6 +228,11 @@ public class WorkShopTest {
   void getUserSetLimitedTo10() {
     assertThat(workShop.getUserSetLimitedTo10()).hasSize(10);
     assertThat(workShop.getUserSetLimitedTo10()).isSubsetOf(workShop.getUserStream().collect(Collectors.toSet()));
+  }
+
+  @Test
+  public void shouldSaveAccountsListInFile() throws IOException {
+    workShop.saveAccountsInFile("accounts.txt");
   }
 
 }

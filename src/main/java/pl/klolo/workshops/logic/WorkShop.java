@@ -3,6 +3,9 @@ package pl.klolo.workshops.logic;
 import pl.klolo.workshops.domain.*;
 import pl.klolo.workshops.mock.HoldingMockGenerator;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
@@ -431,13 +434,23 @@ class WorkShop {
       .collect(Collectors.toSet());
   }
 
-
   /**
    * Zapisuje listę numerów rachunków w pliku na dysku, gdzie w każda linijka wygląda następująco:
    * NUMER_RACHUNKU|KWOTA|WALUTA
    * <p>
    * Skorzystaj z strumieni i try-resources.
    */
+
+  public void saveAccountsInFile(String s) throws IOException {
+
+    FileWriter fileWriter = new FileWriter(s);
+    PrintWriter printWriter = new PrintWriter(fileWriter);
+
+    getAccountStream()
+      .forEachOrdered(account -> printWriter.println(account.getNumber() + "|" + account.getAmount().toString() + "|" + account.getCurrency().toString()));
+
+    printWriter.close();
+  }
 
 
   /**
