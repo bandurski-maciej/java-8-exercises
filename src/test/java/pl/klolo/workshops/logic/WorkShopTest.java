@@ -217,4 +217,9 @@ public class WorkShopTest {
       .orElseThrow()));
   }
 
+  @Test
+  void findUserNamesAsString() {
+    assertThat(workShop.findUserNamesAsString()).contains("Adam Alfred");
+  }
+
 }
