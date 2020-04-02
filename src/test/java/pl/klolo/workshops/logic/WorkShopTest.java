@@ -209,4 +209,12 @@ public class WorkShopTest {
 
   }
 
+  @Test
+  void getAccountsMapWithAccountNumberAndAccount() {
+    assertThat(workShop.getAccountsMapWithAccountNumberAndAccount()).contains(Map.entry("8474", workShop.getAccountStream()
+      .filter(account -> account.getNumber().equals("8474"))
+      .findFirst()
+      .orElseThrow()));
+  }
+
 }

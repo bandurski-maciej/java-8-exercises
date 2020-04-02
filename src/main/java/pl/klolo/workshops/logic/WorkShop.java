@@ -398,6 +398,11 @@ class WorkShop {
       .collect(Collectors.partitioningBy(user -> user.getSex().equals(Sex.WOMAN), Collectors.counting()));
   }
 
+  public Map<String, Account> getAccountsMapWithAccountNumberAndAccount() {
+    return getAccountStream()
+      .collect(Collectors.toMap(Account::getNumber, Function.identity()));
+  }
+
   /**
    * Zwraca mapę rachunków, gdzie kluczem jest numer rachunku, a wartością ten rachunek.
    */
