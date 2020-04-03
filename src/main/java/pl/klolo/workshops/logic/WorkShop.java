@@ -608,6 +608,14 @@ class WorkShop {
    * 39. Policz ile pieniędzy w złotówkach jest na kontach osób które nie są ani kobietą ani mężczyzną.
    */
 
+  public BigDecimal getSumOfMoneyForOtherSex() {
+    return getUserStream()
+      .filter(user -> user.getSex().equals(Sex.OTHER))
+      .flatMap(user -> user.getAccounts().stream())
+      .map(this::calculateToPLN)
+      .reduce(BigDecimal::add)
+      .orElseThrow();
+  }
 
   /**
    * 40. Wymyśl treść polecenia i je zaimplementuj.
@@ -615,5 +623,10 @@ class WorkShop {
    * przyjmując klucz True dla osób pełnoletnich i klucz False dla osób niepełnoletnich. Osoba pełnoletnia to osoba
    * która ma więcej lub równo 18 lat
    */
+
+  public Map<Boolean, Long> getPartitionedUsersByAge() {
+    return getUserStream()
+      .collect(Collectors.partitioningBy(user -> user.getAge() >= 18, Collectors.counting()));
+  }
 
 }

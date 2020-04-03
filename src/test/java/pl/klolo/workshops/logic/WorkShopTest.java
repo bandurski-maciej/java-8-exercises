@@ -7,13 +7,13 @@ import pl.klolo.workshops.domain.*;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class WorkShopTest {
@@ -292,6 +292,23 @@ public class WorkShopTest {
     assertEquals(8, manWithSumMoneyOnAccountsTest.size());
     assertFalse(manWithSumMoneyOnAccountsTest.isEmpty());
   }
+
+  @Test
+  void getSumOfMoneyForOtherSex() {
+
+    BigDecimal sumMoneyOnAccountsForPeopleOtherInPLN = workShop.getSumOfMoneyForOtherSex();
+
+    assertEquals(new BigDecimal("1667.000"), sumMoneyOnAccountsForPeopleOtherInPLN.setScale(3, RoundingMode.HALF_UP));
+    assertNotEquals(new BigDecimal("1666.000"), sumMoneyOnAccountsForPeopleOtherInPLN);
+    assertNotNull(sumMoneyOnAccountsForPeopleOtherInPLN);
+    assertNotSame(Integer.TYPE, sumMoneyOnAccountsForPeopleOtherInPLN.getClass());
+  }
+
+  @Test
+  void shouldReturnPartitionedUsersByAge() {
+    assertThat(19L).isEqualTo(workShop.getPartitionedUsersByAge().get(true));
+  }
+
 }
 
 
