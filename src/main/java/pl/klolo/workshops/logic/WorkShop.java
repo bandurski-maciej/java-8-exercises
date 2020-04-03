@@ -483,10 +483,7 @@ class WorkShop {
    * Zwraca mapę, gdzie kluczem jest typ rachunku a wartością kwota wszystkich środków na rachunkach tego typu
    * przeliczona na złotówki.
    */
-  //TODO: fix
-  // java.lang.AssertionError:
-  // Expected :87461.4992
-  // Actual   :87461.3999
+
   public Map<AccountType, BigDecimal> getMapWithAccountTypeAndAmountDenominatedInPLN() {
     return getAccountStream()
       .collect(Collectors.toMap(Account::getType, this::calculateToPLN, BigDecimal::add));
@@ -568,11 +565,7 @@ class WorkShop {
    * 38.
    * Stwórz mapę gdzie kluczem jest typ rachunku a wartością mapa mężczyzn posiadających ten rachunek, gdzie kluczem
    * jest obiekt User a wartością suma pieniędzy na rachunku danego typu przeliczona na złotkówki.
-   *
-   * @return
    */
-  //TODO: zamiast Map<Stream<AccountType>, Map<User, BigDecimal>> metoda ma zwracać
-  // Map<AccountType>, Map<User, BigDecimal>>, zweryfikować działania metody
 
   Map<Stream<AccountType>, Map<User, BigDecimal>> getMapWithAccountTypeKeyAndSumMoneyForManInPLN() {
     return findCompaniesAsStream()
