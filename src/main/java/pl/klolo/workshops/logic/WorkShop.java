@@ -3,6 +3,7 @@ package pl.klolo.workshops.logic;
 import pl.klolo.workshops.domain.Currency;
 import pl.klolo.workshops.domain.*;
 import pl.klolo.workshops.mock.HoldingMockGenerator;
+import pl.klolo.workshops.mock.UserMockGenerator;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -544,21 +545,64 @@ class WorkShop {
       .count();
   }
 
+
   /**
    * Metoda zwraca N losowych użytkowników (liczba jest stała). Skorzystaj z metody generate. Użytkownicy nie mogą się
    * powtarzać, wszystkie zmienną muszą być final. Jeżeli podano liczbę większą niż liczba użytkowników należy
    * wyrzucić wyjątek (bez zmiany sygnatury metody).
    */
 
+  public List<User> getNUniqueUsers(int n) {
+    final UserMockGenerator userMockGenerator = new UserMockGenerator();
+    final List<User> userList = userMockGenerator.generate();
+    if (n > userList.size()) {
+      throw new IllegalArgumentException("Requested users are exceeding available users amount.");
+    }
+    return userList.stream()
+      .distinct()
+      .limit(n)
+      .collect(Collectors.toList());
+  }
 
   /**
    * 38.
    * Stwórz mapę gdzie kluczem jest typ rachunku a wartością mapa mężczyzn posiadających ten rachunek, gdzie kluczem
    * jest obiekt User a wartością suma pieniędzy na rachunku danego typu przeliczona na złotkówki.
+   *
+   * @return
    */
   //TODO: zamiast Map<Stream<AccountType>, Map<User, BigDecimal>> metoda ma zwracać
   // Map<AccountType>, Map<User, BigDecimal>>, zweryfikować działania metody
 
+  Map<Stream<AccountType>, Map<User, BigDecimal>> getMapWithAccountTypeKeyAndSumMoneyForManInPLN() {
+    return findCompaniesAsStream()
+      .collect(Collectors.toMap(
+        company -> company.getUsers()
+          .stream()
+          .flatMap(user -> user.getAccounts()
+            .stream()
+            .map(Account::getType)),
+        this::manWithSumMoneyOnAccounts
+      ));
+  }
+
+  private Map<User, BigDecimal> manWithSumMoneyOnAccounts(final Company company) {
+    return company
+      .getUsers()
+      .stream()
+      .filter(isMan)
+      .collect(Collectors.toMap(
+        Function.identity(),
+        this::getSumUserAmountInPLN
+      ));
+  }
+
+  private BigDecimal getSumUserAmountInPLN(final User user) {
+    return user.getAccounts()
+      .stream()
+      .map(this::calculateToPLN)
+      .reduce(BigDecimal.ZERO, BigDecimal::add);
+  }
 
   /**
    * 39. Policz ile pieniędzy w złotówkach jest na kontach osób które nie są ani kobietą ani mężczyzną.

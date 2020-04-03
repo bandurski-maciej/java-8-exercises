@@ -2,18 +2,19 @@ package pl.klolo.workshops.logic;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import pl.klolo.workshops.domain.Account;
-import pl.klolo.workshops.domain.AccountType;
 import pl.klolo.workshops.domain.Currency;
-import pl.klolo.workshops.domain.Sex;
+import pl.klolo.workshops.domain.*;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class WorkShopTest {
 
@@ -151,7 +152,7 @@ public class WorkShopTest {
   void findNamesByPredicate() {
     assertThat(Set.of("Adam", "Alfred", "Amadeusz"))
       .containsExactlyInAnyOrderElementsOf(workShop.findNamesByPredicate(user -> user.getFirstName().startsWith("A")));
-    assertThat(16).isEqualTo(workShop.findNamesByPredicate(user -> user.getSex().equals(Sex.MAN)).size());
+    assertThat(11).isEqualTo(workShop.findNamesByPredicate(user -> user.getSex().equals(Sex.MAN)).size());
 
   }
 
@@ -270,7 +271,7 @@ public class WorkShopTest {
 
   @Test
   void shouldReturnMapWithAccountTypeAndAmountDenominatedInPLN() {
-    assertThat(workShop.getMapWithAccountTypeAndAmountDenominatedInPLN()).contains(Map.entry(AccountType.LO2, BigDecimal.valueOf(87038)));
+    assertThat(workShop.getMapWithAccountTypeAndAmountDenominatedInPLN()).contains(Map.entry(AccountType.ROR2, new BigDecimal(427948)));
   }
 
   @Test
@@ -278,4 +279,19 @@ public class WorkShopTest {
     assertThat(workShop.getSquareSumOfAge()).isEqualTo(27720);
   }
 
+  @Test
+  void shouldReturnNUniqueUsers() {
+    assertThat(workShop.getNUniqueUsers(5)).hasSize(5);
+    assertThrows(IllegalArgumentException.class, () -> workShop.getNUniqueUsers(100));
+  }
+
+  @Test
+  void shouldReturnMapWithMapContainingUsersAndAmount() {
+    Map<Stream<AccountType>, Map<User, BigDecimal>> manWithSumMoneyOnAccountsTest =
+      workShop.getMapWithAccountTypeKeyAndSumMoneyForManInPLN();
+    assertEquals(8, manWithSumMoneyOnAccountsTest.size());
+    assertFalse(manWithSumMoneyOnAccountsTest.isEmpty());
+  }
 }
+
+
